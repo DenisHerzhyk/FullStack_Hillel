@@ -196,6 +196,6 @@ a {
     font-weight: var(--font-weight-medium);
     margin-bottom: 7px;
 }
-.footer_privacy {
+.footer__privacy {
     font-size: 13px;
 }
