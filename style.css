@@ -43,6 +43,10 @@ html {
     font-weight: var(--font-weight-regular)
 }
 
+body {
+    overflow-x: hidden;
+}
+
 a {
     text-decoration: none;
 }
