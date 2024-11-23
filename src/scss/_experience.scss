@@ -1,0 +1,112 @@
+.experience {
+  padding-top: 100px;
+  padding-bottom: 92px;
+  background-color: $color-primary;
+  color: $color-white;
+  &-part {
+    display: flex;
+    flex-direction: row;
+    gap: $gap-lg;
+  }
+  &-item {
+    display: flex;
+    flex-direction: row;
+    gap: $gap;
+    &__number {
+      font-size: 21px;
+      font-weight: $font-weight-medium;
+      line-height: 1.4;
+    }
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: $gap-lg;
+  }
+}
+
+@media (max-width: $breakpoint-xlarge) {
+  .experience {
+    padding-top: 70px;
+    padding-bottom: 70px;
+    &__container {
+      gap: $gap-md;
+    }
+    &-part {
+      gap: calc($gap-sm + 5px);
+    }
+    &-item {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: $gap-md;
+      &__description {
+        align-content: center;
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-large) {
+  .experience {
+    padding-top: 62px;
+    padding-bottom: 62px;
+    &-part {
+      gap: calc($gap-sm + 5px);
+    }
+    &-item {
+      justify-content: center;
+      gap: calc($gap-md - 3px);
+      &__number {
+        font-size: 19px;
+        line-height: 1.3;
+      }
+      &__text {
+        font-size: 15px;
+      }
+      &__image {
+        &__icon {
+          height: 45px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-medium) {
+  .experience {
+    padding-top: 52px;
+    padding-bottom: 52px;
+    &-item {
+      justify-content: center;
+      gap: calc($gap-md - 20px);
+      &__number {
+        font-size: 17px;
+      }
+      &__text {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-small) {
+  .experience {
+    padding-top: 45px;
+    padding-bottom: 45px;
+    &-part {
+      flex-direction: column;
+      gap: calc($gap-sm + 5px);
+    }
+    &-item {
+      justify-content: center;
+      gap: calc($gap-sm + 5px);
+      &__number {
+        font-size: 16px;
+      }
+    }
+  }
+}
