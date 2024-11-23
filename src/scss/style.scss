@@ -1,7 +1,7 @@
-@import "global";
-@import "header";
-@import "about";
-@import "experience";
-@import "process";
-@import "video";
-@import "footer";
+@use "common";
+@use "components/header";
+@use "components/about";
+@use "components/experience";
+@use "components/process";
+@use "components/video";
+@use "components/footer";

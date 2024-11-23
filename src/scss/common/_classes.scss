@@ -1,0 +1,33 @@
+@use "presets" as *;
+@use "mixins" as *;
+
+.container {
+  @include container_default($container-primary);
+  @at-root &--sm {
+    @include container_default($container-secondary);
+  }
+}
+
+@media (max-width: $breakpoint-xlarge) {
+  .container {
+    @include container(870px, 550px);
+  }
+}
+
+@media (max-width: $breakpoint-large) {
+  .container {
+    @include container(700px, 500px);
+  }
+}
+
+@media (max-width: $breakpoint-medium) {
+  .container {
+    @include container(500px, 400px);
+  }
+}
+
+@media (max-width: $breakpoint-small) {
+  .container {
+    @include container(400px, 250px);
+  }
+}

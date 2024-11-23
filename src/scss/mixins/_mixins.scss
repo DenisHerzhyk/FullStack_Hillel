@@ -1,0 +1,38 @@
+@use "presets" as *;
+
+@mixin section_title_adapt($fz, $mb) {
+  font-size: $fz;
+  margin-bottom: $mb;
+}
+
+@mixin section($pb) {
+  padding-top: 105px;
+  padding-bottom: $pb;
+  &__title {
+    font-size: 32px;
+    text-align: center;
+    font-weight: $font-weight-medium;
+    margin-bottom: 32px;
+  }
+  &__description {
+    color: $color-secondary;
+    text-align: center;
+  }
+}
+
+@mixin container_default($width) {
+  width: min(100% - 70px, $width);
+  margin-inline: auto;
+}
+
+@mixin container($lg, $sm) {
+  width: min(100% - 70px, $lg);
+  @at-root &--sm {
+    width: min(100% - 70px, $sm);
+  }
+}
+
+@mixin section_title_adapt($fz, $mb) {
+  font-size: $fz;
+  margin-bottom: $mb;
+}

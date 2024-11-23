@@ -1,0 +1,26 @@
+@use "presets" as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style-type: none;
+}
+
+html {
+  font-size: $font-size;
+  color: $color-black;
+  font-family: $font-family;
+  line-height: $line-height;
+  font-weight: $font-weight-regular;
+}
+
+html,
+body {
+  min-width: 375px;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+}

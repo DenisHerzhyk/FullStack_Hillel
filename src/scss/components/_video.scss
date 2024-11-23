@@ -1,0 +1,39 @@
+@use "presets" as *;
+@use "mixins" as *;
+
+.video {
+  background-color: $color-gray-light;
+  padding-bottom: 100px;
+  &__container iframe {
+    height: 600px;
+    width: 100%;
+    border: none;
+  }
+  @include xlarge {
+    padding-bottom: 90px;
+    .video__container iframe {
+      height: 550px;
+    }
+  }
+
+  @include large {
+    padding-bottom: 80px;
+    .video__container iframe {
+      height: 480px;
+    }
+  }
+
+  @include medium {
+    padding-bottom: 65px;
+    .video__container iframe {
+      height: 350px;
+    }
+  }
+
+  @include small {
+    padding-bottom: 50px;
+    .video__container iframe {
+      height: 280px;
+    }
+  }
+}

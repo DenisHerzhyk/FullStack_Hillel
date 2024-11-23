@@ -1,0 +1,25 @@
+@use "presets" as *;
+
+@mixin xlarge() {
+  @media (max-width: $breakpoint-xlarge) {
+    @content;
+  }
+}
+
+@mixin large() {
+  @media (max-width: $breakpoint-large) {
+    @content;
+  }
+}
+
+@mixin medium() {
+  @media (max-width: $breakpoint-medium) {
+    @content;
+  }
+}
+
+@mixin small() {
+  @media (max-width: $breakpoint-small) {
+    @content;
+  }
+}

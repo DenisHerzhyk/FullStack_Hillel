@@ -1,0 +1,40 @@
+@use "presets" as *;
+@use "mixins" as *;
+
+.about {
+  @include section(93px);
+  @include xlarge {
+    padding-top: 93px;
+    padding-bottom: 93px;
+    &__title {
+      @include section_title_adapt(30px, 25px);
+    }
+  }
+
+  @include large {
+    padding-top: 80px;
+    padding-bottom: 80px;
+    &__title {
+      @include section_title_adapt(29px, 20px);
+    }
+    &__description {
+      font-size: 15px;
+    }
+  }
+
+  @include medium {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    &__title {
+      @include section_title_adapt(26px, 15px);
+    }
+    &__description {
+      font-size: 14px;
+    }
+  }
+
+  @include small {
+    padding-top: 45px;
+    padding-bottom: 45px;
+  }
+}

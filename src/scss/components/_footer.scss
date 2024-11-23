@@ -1,3 +1,6 @@
+@use "presets" as *;
+@use "mixins" as *;
+
 .footer {
   color: $color-white;
   background-color: $color-primary;
@@ -11,10 +14,7 @@
   &__privacy {
     font-size: 13px;
   }
-}
-
-@media (max-width: $breakpoint-xlarge) {
-  .footer {
+  @include xlarge {
     padding-top: 40px;
     padding-bottom: 40px;
     &__name {
@@ -22,20 +22,16 @@
       margin-bottom: 6px;
     }
   }
-}
 
-@media (max-width: $breakpoint-large) {
-  .footer {
+  @include large {
     padding-top: 33px;
     padding-bottom: 33px;
     &__privacy {
       font-size: 12px;
     }
   }
-}
 
-@media (max-width: $breakpoint-medium) {
-  .footer {
+  @include medium {
     padding-top: 25px;
     padding-bottom: 25px;
     &__name {
@@ -46,10 +42,8 @@
       font-size: 11px;
     }
   }
-}
 
-@media (max-width: $breakpoint-small) {
-  .footer {
+  @include small {
     &__name {
       font-size: 17px;
     }

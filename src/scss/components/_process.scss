@@ -1,27 +1,18 @@
-.process {
-  @extend %section;
-  background-color: $color-gray-light;
-  padding-bottom: 50px;
-  &__title {
-    @include section_title;
-  }
-  &__description {
-    @include section__description;
-  }
-}
+@use "presets" as *;
+@use "mixins" as *;
 
-@media (max-width: $breakpoint-xlarge) {
-  .about {
+.process {
+  @include section(50px);
+  background-color: $color-gray-light;
+  @include xlarge {
     padding-top: 93px;
     padding-bottom: 93px;
     &__title {
       @include section_title_adapt(30px, 25px);
     }
   }
-}
 
-@media (max-width: $breakpoint-large) {
-  .process {
+  @include large {
     padding-top: 80px;
     &__title {
       @include section_title_adapt(29px, 20px);
@@ -30,10 +21,8 @@
       font-size: 15px;
     }
   }
-}
 
-@media (max-width: $breakpoint-medium) {
-  .process {
+  @include medium {
     padding-top: 60px;
     padding-bottom: 40px;
     &__title {
@@ -43,10 +32,8 @@
       font-size: 14px;
     }
   }
-}
 
-@media (max-width: $breakpoint-small) {
-  .process {
+  @include small {
     padding-top: 45px;
     padding-bottom: 35px;
   }
