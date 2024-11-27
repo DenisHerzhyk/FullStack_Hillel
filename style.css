@@ -1,0 +1,31 @@
+.square,
+.rect,
+.circle,
+.ellipse {
+  transition: transform 1.5s, fill 1s, stroke 1s;
+  transform-origin: center;
+}
+
+.square:hover {
+  fill: tomato;
+  stroke: greenyellow;
+  transform: rotate(0.5turn);
+}
+
+.rect:hover {
+  fill: aqua;
+  stroke: darkslategrey;
+  transform: translateY(-30px);
+}
+
+.circle:hover {
+  fill: yellowgreen;
+  stroke: darkolivegreen;
+  transform: skew(30deg);
+}
+
+.ellipse:hover {
+  fill: darkorchid;
+  stroke: darkseagreen;
+  transform: scale(0.8) translate(30px);
+}
