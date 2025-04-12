@@ -1,0 +1,33 @@
+{
+  "name": "gulp_setup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DenisHerzhyk/gulp_setup.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DenisHerzhyk/gulp_setup/issues"
+  },
+  "homepage": "https://github.com/DenisHerzhyk/gulp_setup#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "browser-sync": "^3.0.3",
+    "css-mqpacker": "^7.0.0",
+    "cssnano": "^7.0.6",
+    "gulp": "^5.0.0",
+    "gulp-csscomb": "^3.1.0",
+    "gulp-postcss": "^10.0.0",
+    "gulp-pug": "^5.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^6.0.0",
+    "sass": "^1.85.0",
+    "sort-css-media-queries": "^2.4.0"
+  }
+}
