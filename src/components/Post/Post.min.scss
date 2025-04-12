@@ -1,0 +1,16 @@
+.Post {
+  &__container {
+    display: flex;
+  }
+  &__userId {
+    color: #646cff;
+    font-weight: bold;
+  }
+  &__body {
+    text-decoration: underline;
+  }
+  &__title {
+    color: orange;
+    font-weight: bold;
+  }
+}
