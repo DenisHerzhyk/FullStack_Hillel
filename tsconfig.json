@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    // Виберіть версію ECMAScript для вихідного коду
+    "module": "commonjs",
+    // Використовуйте commonjs для сумісності з Node.js
+    "strict": true,
+    // Увімкніть строгий режим
+    "esModuleInterop": true,
+    // Дозволяє імпортувати CommonJS модулі в ES модульному синтаксисі
+    "skipLibCheck": true,
+    // Пропустіть перевірку типів у файлів оголошень
+    "forceConsistentCasingInFileNames": true,
+    // Вимагайте послідовного регістру у назвах файлів
+    "outDir": "./dist"
+    // Вкажіть директорію для вихідних файлів
+  },
+  "include": [
+    "src/**/*"
+  ],
+  // Вкажіть файли або директорії, які потрібно включити в компіляцію
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts"
+  ]
+  // Виключіть директорію node_modules та тестові файли з компіляції
+}
