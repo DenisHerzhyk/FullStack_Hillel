@@ -1,0 +1,16 @@
+{
+  "name": "vitest_sum_divide_project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:vitest": "vitest"
+  },
+  "devDependencies": {
+    "vite": "^6.0.5",
+    "vitest": "^3.0.4"
+  }
+}
