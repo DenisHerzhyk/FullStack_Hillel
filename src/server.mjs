@@ -1,7 +1,6 @@
 // Реалізація HTTP сервера відповідно до завдання, описаного у файлі ASSIGNMENT.md
 
 import http from 'http';
-import url from 'url';
 import querystring from 'querystring';
 
 // Константи
@@ -29,7 +28,7 @@ const PAGES = {
 
 // Створення сервера
 const server = http.createServer((req, res) => {
-  const pathname = url.parse(req.url || '/', true).pathname;
+  const pathname = new URL(req.url, 'http://localhost').pathname;
   
   // Обробка GET запитів
   if (req.method === 'GET') {
