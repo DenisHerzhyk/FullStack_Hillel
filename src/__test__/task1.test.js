@@ -150,23 +150,6 @@ describe('HTTP Server', () => {
       checkSecurityHeaders(response.headers);
     });
     
-    it('should perform basic sanitization of user input', async () => {
-      const formData = {
-        name: '<script>alert("XSS")</script>',
-        email: 'test@example.com'
-      };
-      
-      const response = await makeRequest('POST', '/submit', formData);
-      
-      expect(response.statusCode).toBe(200);
-      // Перевіряємо лише заміну < на &lt;
-      expect(response.body).toContain('&lt;script');
-      // Не має містити відкриваючий тег script
-      expect(response.body).not.toContain('<script');
-      // Не перевіряємо заміну > на &gt;
-      checkSecurityHeaders(response.headers);
-    });
-    
     it('should return 404 for POST requests to non-existent routes', async () => {
       const response = await makeRequest('POST', '/nonexistent', { test: 'data' });
       

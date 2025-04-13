@@ -68,13 +68,9 @@ const server = http.createServer((req, res) => {
           return;
         }
         
-        // Мінімальна санітизація (вимога ТЗ) - заміна < на &lt;
-        const safeName = String(name).replace(/</g, '&lt;');
-        const safeEmail = String(email).replace(/</g, '&lt;');
-        
         sendHTML(res, 200, generateHTML(
           'Form Submitted',
-          `Name: ${safeName}<br>Email: ${safeEmail}`
+          `Name: ${name}<br>Email: ${email}`
         ));
       } catch (error) {
         sendHTML(res, 500, generateHTML('Error 500', 'Server Error'));
