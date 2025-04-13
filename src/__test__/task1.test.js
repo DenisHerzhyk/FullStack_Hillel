@@ -208,5 +208,34 @@ describe('HTTP Server', () => {
       expect(response.body).toContain('Method Not Allowed');
       checkSecurityHeaders(response.headers);
     });
+
+    it('should handle requests with undefined or null URL', async () => {
+      // Створюємо мок для req з undefined url
+      const mockReq = {
+        method: 'GET',
+        url: undefined,
+        on: vi.fn()
+      };
+      
+      // Створюємо мок для res
+      const mockRes = {
+        writeHead: vi.fn(),
+        end: vi.fn()
+      };
+      
+      // Отримуємо доступ до обробника запитів сервера
+      const serverListener = server.listeners('request')[0];
+      
+      // Викликаємо обробник з mock об'єктами
+      serverListener(mockReq, mockRes);
+      
+      // Перевіряємо, що сервер правильно обробив запит з undefined URL
+      expect(mockRes.writeHead).toHaveBeenCalledWith(
+        200,
+        expect.objectContaining({
+          'Content-Type': 'text/html; charset=utf-8'
+        })
+      );
+    });
   });
 });
