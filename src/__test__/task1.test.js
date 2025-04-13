@@ -154,6 +154,26 @@ describe('HTTP Server', () => {
       expect(response.statusCode).toBe(404);
       checkSecurityHeaders(response.headers);
     });
+    
+    it('should return 500 when an error occurs during form processing', async () => {
+      // Мокаємо querystring.parse щоб викинути помилку
+      const originalParse = querystring.parse;
+      querystring.parse = vi.fn().mockImplementation(() => {
+        throw new Error('Test error');
+      });
+      
+      try {
+        const response = await makeRequest('POST', '/submit', { test: 'data' });
+        
+        expect(response.statusCode).toBe(500);
+        expect(response.body).toContain('Error 500');
+        expect(response.body).toContain('Server Error');
+        checkSecurityHeaders(response.headers);
+      } finally {
+        // Відновлюємо оригінальну функцію
+        querystring.parse = originalParse;
+      }
+    });
   });
   
   // Тестування обробки помилок
