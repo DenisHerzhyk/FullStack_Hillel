@@ -6,7 +6,6 @@ import querystring from 'querystring';
 
 // Константи
 const PORT = 3000;
-const MAX_REQUEST_SIZE = 1024 * 1024; // 1MB
 
 // HTML шаблон
 const generateHTML = (title, content) => `<!DOCTYPE html>
@@ -46,15 +45,8 @@ const server = http.createServer((req, res) => {
   // Обробка POST запитів
   if (req.method === 'POST' && pathname === '/submit') {
     let body = '';
-    let size = 0;
     
     req.on('data', (chunk) => {
-      size += chunk.length;
-      if (size > MAX_REQUEST_SIZE) {
-        sendHTML(res, 413, generateHTML('Error 413', 'Payload Too Large'));
-        req.destroy();
-        return;
-      }
       body += chunk.toString();
     });
     
