@@ -1,18 +1,14 @@
-// Реалізація HTTP сервера відповідно до завдання, описаного у файлі ASSIGNMENT.md
+// Простий HTTP сервер
 
 import http from 'http';
 import url from 'url';
 import querystring from 'querystring';
 
-// Конфігурація порту сервера
-const PORT = process.env.PORT || 3000;
+// Константи
+const PORT = 3000;
 
-// Максимальний розмір запиту (1MB)
-const MAX_REQUEST_SIZE = 1024 * 1024;
-
-// Генерація HTML сторінок
-const generateHTML = (title, content) => {
-  return `<!DOCTYPE html>
+// HTML шаблон
+const html = (title, content) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -23,146 +19,88 @@ const generateHTML = (title, content) => {
   <p>${content}</p>
 </body>
 </html>`;
+
+// Сторінки
+const PAGES = {
+  '/': { title: 'Home', content: 'Welcome to the Home Page' },
+  '/about': { title: 'About', content: 'Learn more about us' },
+  '/contact': { title: 'Contact', content: 'Get in touch' }
 };
 
-// Сторінки для різних маршрутів
-const pages = {
-  '/': {
-    title: 'Home',
-    content: 'Welcome to the Home Page'
-  },
-  '/about': {
-    title: 'About',
-    content: 'Learn more about us'
-  },
-  '/contact': {
-    title: 'Contact',
-    content: 'Get in touch'
+// Зчитування тіла запиту
+const readBody = (req) => {
+  return new Promise((resolve) => {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => resolve(body));
+  });
+};
+
+// Створення сервера
+const server = http.createServer(async (req, res) => {
+  const pathname = url.parse(req.url || '/', true).pathname;
+  
+  // GET запити
+  if (req.method === 'GET') {
+    if (PAGES[pathname]) {
+      const { title, content } = PAGES[pathname];
+      send(res, 200, html(title, content));
+    } else {
+      send(res, 404, html('Error 404', 'Page Not Found'));
+    }
+    return;
   }
-};
-
-// Санітизація введення для запобігання XSS
-const sanitizeInput = (input) => {
-  if (typeof input !== 'string') return '';
-  return input
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-};
+  
+  // POST запити
+  if (req.method === 'POST' && pathname === '/submit') {
+    const body = await readBody(req);
+    const { name, email } = querystring.parse(body);
+    
+    // Валідація
+    if (!name || !email) {
+      send(res, 400, html('Error 400', 'Invalid form data'));
+      return;
+    }
+    
+    // Мінімальна санітизація
+    const safeName = String(name).replace(/</g, '&lt;');
+    const safeEmail = String(email).replace(/</g, '&lt;');
+    
+    send(res, 200, html('Form Submitted', `Name: ${safeName}<br>Email: ${safeEmail}`));
+    return;
+  }
+  
+  // Інші запити
+  if (req.method === 'POST') {
+    send(res, 404, html('Error 404', 'Endpoint Not Found'));
+  } else {
+    send(res, 405, html('Error 405', 'Method Not Allowed'));
+  }
+});
 
 // Відправка відповіді
-const sendResponse = (res, statusCode, content, headers = {}) => {
-  const buffer = Buffer.from(content, 'utf-8');
-  
-  res.writeHead(statusCode, {
+function send(res, status, content) {
+  const buffer = Buffer.from(content);
+  res.writeHead(status, {
     'Content-Type': 'text/html; charset=utf-8',
     'Content-Length': buffer.length,
-    'X-Content-Type-Options': 'nosniff',
-    ...headers
+    'X-Content-Type-Options': 'nosniff'
   });
-  
   res.end(buffer);
-};
-
-// Відправка помилки
-const sendError = (res, statusCode, message) => {
-  const errorHTML = generateHTML(`Error ${statusCode}`, message);
-  sendResponse(res, statusCode, errorHTML);
-};
-
-// Обробник GET-запитів
-const handleGET = (req, res, pathname) => {
-  if (pages[pathname]) {
-    const { title, content } = pages[pathname];
-    const html = generateHTML(title, content);
-    sendResponse(res, 200, html);
-  } else {
-    sendError(res, 404, 'Page Not Found');
-  }
-};
-
-// Обробник POST-запитів
-const handlePOST = (req, res, pathname) => {
-  if (pathname === '/submit') {
-    let body = '';
-    let totalSize = 0;
-    
-    req.on('data', (chunk) => {
-      // Перевірка розміру запиту
-      totalSize += chunk.length;
-      if (totalSize > MAX_REQUEST_SIZE) {
-        sendError(res, 413, 'Payload Too Large');
-        req.destroy();
-        return;
-      }
-      body += chunk.toString();
-    });
-    
-    req.on('end', () => {
-      try {
-        // Парсинг даних форми
-        const formData = querystring.parse(body);
-        const { name, email } = formData;
-        
-        // Валідація даних
-        if (!name || !email) {
-          sendError(res, 400, 'Invalid form data');
-          return;
-        }
-        
-        // Санітизація даних
-        const sanitizedName = sanitizeInput(name);
-        const sanitizedEmail = sanitizeInput(email);
-        
-        // Генерація відповіді
-        const confirmationHTML = generateHTML(
-          'Form Submitted',
-          `Name: ${sanitizedName}<br>Email: ${sanitizedEmail}`
-        );
-        
-        sendResponse(res, 200, confirmationHTML);
-      } catch (error) {
-        sendError(res, 500, 'Server Error');
-      }
-    });
-  } else {
-    sendError(res, 404, 'Endpoint Not Found');
-  }
-};
-
-// Створення HTTP сервера
-const server = http.createServer((req, res) => {
-  try {
-    // Парсинг URL
-    const parsedUrl = url.parse(req.url || '/', true);
-    const pathname = parsedUrl.pathname;
-    
-    // Маршрутизація запитів
-    switch (req.method) {
-      case 'GET':
-        handleGET(req, res, pathname);
-        break;
-      case 'POST':
-        handlePOST(req, res, pathname);
-        break;
-      default:
-        sendError(res, 405, 'Method Not Allowed');
-    }
-  } catch (error) {
-    // Обробка неочікуваних помилок
-    sendError(res, 500, 'Server Error');
-  }
-});
+}
 
 // Запуск сервера
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const startServer = (port = PORT) => {
+  return new Promise(resolve => {
+    server.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+      resolve(server);
+    });
+  });
+};
 
-// Обробка помилок сервера
-server.on('error', (error) => {
-  console.error('Server error:', error.message);
-});
+if (process.argv[1] === import.meta.url) {
+  startServer();
+}
 
-export { server };
+export { server, startServer };
