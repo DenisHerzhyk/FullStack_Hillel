@@ -1,11 +1,10 @@
-import { server, startServer } from '../server.mjs';
+import { server } from '../server.mjs';
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import http from 'http';
 import querystring from 'querystring';
 
 describe('HTTP Server', () => {
-  let PORT = 4000; // Використовуємо інший порт для тестування
-  let serverInstance;
+  const PORT = 3000; // Використовуємо фіксований порт 3000
   
   // Допоміжна функція для виконання HTTP запитів
   const makeRequest = (method, path, data = null) => {
@@ -61,19 +60,18 @@ describe('HTTP Server', () => {
     expect(headers['x-content-type-options']).toBe('nosniff');
   };
   
-  beforeAll(async () => {
+  beforeAll(() => {
     // Створюємо спай для запобігання виводу логів під час тестів
     vi.spyOn(console, 'log').mockImplementation(() => {});
     vi.spyOn(console, 'error').mockImplementation(() => {});
     
-    // Запускаємо сервер на окремому порту для тестування
-    serverInstance = await startServer(PORT);
+    // Сервер вже запущено на порту 3000 в файлі server.mjs
   });
   
   afterAll(() => {
     // Закриваємо сервер після тестів
-    if (serverInstance && serverInstance.listening) {
-      serverInstance.close();
+    if (server && server.listening) {
+      server.close();
     }
     vi.restoreAllMocks();
   });

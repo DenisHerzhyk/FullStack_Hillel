@@ -90,19 +90,10 @@ function sendHTML(res, statusCode, html) {
   res.end(buffer);
 }
 
-// Функція для запуску сервера
-const startServer = (port = PORT) => {
-  return new Promise((resolve) => {
-    server.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-      resolve(server);
-    });
-  });
-};
+// Прямий запуск сервера на порту 3000
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
-// Запускаємо сервер, якщо файл викликано напряму
-if (process.argv[1] === import.meta.url) {
-  startServer();
-}
-
-export { server, startServer };
+// Експорт для тестів
+export { server };
