@@ -1,63 +1,17 @@
 import { app, server } from '../server.mjs';
-import { describe, test, expect, beforeAll, afterAll, afterEach, vi } from 'vitest';
+import { describe, test, expect, beforeAll, afterAll, vi } from 'vitest';
 import request from 'supertest';
 
-// MOCK для імітації бази даних
-const mockUsers = new Map();
-const mockArticles = new Map();
-
-// ID, який гарантовано "не існує"
+// ID, що використовуються в тестах
+const VALID_USER_ID = '123';
+const VALID_ARTICLE_ID = '456';
 const NON_EXISTENT_ID = 'non-existent-id';
-
-// Додавання тестових даних у МОКи
-mockUsers.set('123', { name: 'Test User' });
-mockArticles.set('456', { title: 'Test Article' });
-
-// Мокуємо запити до сервера
-const originalGet = app.get.bind(app);
-const originalPost = app.post.bind(app);
-const originalPut = app.put.bind(app);
-const originalDelete = app.delete.bind(app);
 
 describe('Express REST API', () => {
   beforeAll(() => {
     // Створюємо спай для запобігання виводу логів під час тестів
     vi.spyOn(console, 'log').mockImplementation(() => {});
     vi.spyOn(console, 'error').mockImplementation(() => {});
-    
-    // Мокуємо маршрути сервера для тестування
-    vi.spyOn(app, 'get').mockImplementation((path, ...handlers) => {
-      // Обробляємо GET запити для неіснуючих ресурсів
-      if (path === `/users/${NON_EXISTENT_ID}` || path === `/articles/${NON_EXISTENT_ID}`) {
-        return app;
-      }
-      return originalGet(path, ...handlers);
-    });
-    
-    vi.spyOn(app, 'post').mockImplementation((path, ...handlers) => {
-      return originalPost(path, ...handlers);
-    });
-    
-    vi.spyOn(app, 'put').mockImplementation((path, ...handlers) => {
-      // Обробляємо PUT запити для неіснуючих ресурсів
-      if (path === `/users/${NON_EXISTENT_ID}` || path === `/articles/${NON_EXISTENT_ID}`) {
-        return app;
-      }
-      return originalPut(path, ...handlers);
-    });
-    
-    vi.spyOn(app, 'delete').mockImplementation((path, ...handlers) => {
-      // Обробляємо DELETE запити для неіснуючих ресурсів
-      if (path === `/users/${NON_EXISTENT_ID}` || path === `/articles/${NON_EXISTENT_ID}`) {
-        return app;
-      }
-      return originalDelete(path, ...handlers);
-    });
-  });
-  
-  afterEach(() => {
-    // Очищаємо моки після кожного тесту
-    vi.clearAllMocks();
   });
   
   afterAll(() => {
@@ -96,30 +50,68 @@ describe('Express REST API', () => {
       expect(response.text).toBe('Post users route');
     });
     
+    test('POST /users повинен повертати статус 400 при некоректних даних', async () => {
+      const response = await request(app)
+        .post('/users')
+        .send({ name: '' });
+      
+      expect(response.status).toBe(400);
+      expect(response.text).toBe('Bad Request');
+    });
+    
     test('GET /users/:userId повинен повертати статус 200 та правильне повідомлення з ID', async () => {
-      const userId = '123';
-      const response = await request(app).get(`/users/${userId}`);
+      const response = await request(app).get(`/users/${VALID_USER_ID}`);
       
       expect(response.status).toBe(200);
-      expect(response.text).toBe(`Get user by Id route: ${userId}`);
+      expect(response.text).toBe(`Get user by Id route: ${VALID_USER_ID}`);
+    });
+    
+    test('GET /users/:userId повинен повертати статус 404 для неіснуючого користувача', async () => {
+      const response = await request(app).get(`/users/${NON_EXISTENT_ID}`);
+      
+      expect(response.status).toBe(404);
+      expect(response.text).toBe('Not Found');
     });
     
     test('PUT /users/:userId повинен повертати статус 200 та правильне повідомлення з ID', async () => {
-      const userId = '123';
       const response = await request(app)
-        .put(`/users/${userId}`)
+        .put(`/users/${VALID_USER_ID}`)
         .send({ name: 'Updated User' });
       
       expect(response.status).toBe(200);
-      expect(response.text).toBe(`Put user by Id route: ${userId}`);
+      expect(response.text).toBe(`Put user by Id route: ${VALID_USER_ID}`);
+    });
+    
+    test('PUT /users/:userId повинен повертати статус 400 при некоректних даних', async () => {
+      const response = await request(app)
+        .put(`/users/${VALID_USER_ID}`)
+        .send({ name: '' });
+      
+      expect(response.status).toBe(400);
+      expect(response.text).toBe('Bad Request');
+    });
+    
+    test('PUT /users/:userId повинен повертати статус 404 для неіснуючого користувача', async () => {
+      const response = await request(app)
+        .put(`/users/${NON_EXISTENT_ID}`)
+        .send({ name: 'Updated User' });
+      
+      expect(response.status).toBe(404);
+      expect(response.text).toBe('Not Found');
     });
     
     test('DELETE /users/:userId повинен повертати статус 204 без вмісту', async () => {
-      const userId = '123';
-      const response = await request(app).delete(`/users/${userId}`);
+      const response = await request(app).delete(`/users/${VALID_USER_ID}`);
       
       expect(response.status).toBe(204);
       expect(response.text).toBe('');
+    });
+    
+    test('DELETE /users/:userId повинен повертати статус 404 для неіснуючого користувача', async () => {
+      const response = await request(app).delete(`/users/${NON_EXISTENT_ID}`);
+      
+      expect(response.status).toBe(404);
+      expect(response.text).toBe('Not Found');
     });
   });
   
@@ -141,30 +133,68 @@ describe('Express REST API', () => {
       expect(response.text).toBe('Post articles route');
     });
     
+    test('POST /articles повинен повертати статус 400 при некоректних даних', async () => {
+      const response = await request(app)
+        .post('/articles')
+        .send({ title: '' });
+      
+      expect(response.status).toBe(400);
+      expect(response.text).toBe('Bad Request');
+    });
+    
     test('GET /articles/:articleId повинен повертати статус 200 та правильне повідомлення з ID', async () => {
-      const articleId = '456';
-      const response = await request(app).get(`/articles/${articleId}`);
+      const response = await request(app).get(`/articles/${VALID_ARTICLE_ID}`);
       
       expect(response.status).toBe(200);
-      expect(response.text).toBe(`Get article by Id route: ${articleId}`);
+      expect(response.text).toBe(`Get article by Id route: ${VALID_ARTICLE_ID}`);
+    });
+    
+    test('GET /articles/:articleId повинен повертати статус 404 для неіснуючої статті', async () => {
+      const response = await request(app).get(`/articles/${NON_EXISTENT_ID}`);
+      
+      expect(response.status).toBe(404);
+      expect(response.text).toBe('Not Found');
     });
     
     test('PUT /articles/:articleId повинен повертати статус 200 та правильне повідомлення з ID', async () => {
-      const articleId = '456';
       const response = await request(app)
-        .put(`/articles/${articleId}`)
+        .put(`/articles/${VALID_ARTICLE_ID}`)
         .send({ title: 'Updated Article' });
       
       expect(response.status).toBe(200);
-      expect(response.text).toBe(`Put article by Id route: ${articleId}`);
+      expect(response.text).toBe(`Put article by Id route: ${VALID_ARTICLE_ID}`);
+    });
+    
+    test('PUT /articles/:articleId повинен повертати статус 400 при некоректних даних', async () => {
+      const response = await request(app)
+        .put(`/articles/${VALID_ARTICLE_ID}`)
+        .send({ title: '' });
+      
+      expect(response.status).toBe(400);
+      expect(response.text).toBe('Bad Request');
+    });
+    
+    test('PUT /articles/:articleId повинен повертати статус 404 для неіснуючої статті', async () => {
+      const response = await request(app)
+        .put(`/articles/${NON_EXISTENT_ID}`)
+        .send({ title: 'Updated Article' });
+      
+      expect(response.status).toBe(404);
+      expect(response.text).toBe('Not Found');
     });
     
     test('DELETE /articles/:articleId повинен повертати статус 204 без вмісту', async () => {
-      const articleId = '456';
-      const response = await request(app).delete(`/articles/${articleId}`);
+      const response = await request(app).delete(`/articles/${VALID_ARTICLE_ID}`);
       
       expect(response.status).toBe(204);
       expect(response.text).toBe('');
+    });
+    
+    test('DELETE /articles/:articleId повинен повертати статус 404 для неіснуючої статті', async () => {
+      const response = await request(app).delete(`/articles/${NON_EXISTENT_ID}`);
+      
+      expect(response.status).toBe(404);
+      expect(response.text).toBe('Not Found');
     });
   });
   
@@ -175,6 +205,18 @@ describe('Express REST API', () => {
       
       expect(response.status).toBe(404);
       expect(response.text).toBe('Not Found');
+    });
+    
+    test('Глобальна обробка помилок повинна повертати статус 500', async () => {
+      // Створюємо тимчасовий маршрут, який викликає помилку
+      app.get('/error-test', (req, res, next) => {
+        next(new Error('Test error'));
+      });
+      
+      const response = await request(app).get('/error-test');
+      
+      expect(response.status).toBe(500);
+      expect(response.text).toBe('Internal Server Error');
     });
   });
 });
