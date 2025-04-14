@@ -1,98 +1,77 @@
-// Реалізація HTTP сервера відповідно до завдання, описаного у файлі ASSIGNMENT.md
+// Реалізація RESTful API сервера відповідно до завдання, описаного у файлі ASSIGNMENT.md
 
-import http from 'http';
-import querystring from 'querystring';
+import express from 'express';
 
 // Константи
 const PORT = 3000;
+const app = express();
 
-// HTML шаблон
-const generateHTML = (title, content) => `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>${title}</title>
-</head>
-<body>
-  <h1>${title}</h1>
-  <p>${content}</p>
-</body>
-</html>`;
+// Middleware для обробки JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Сторінки
-const PAGES = {
-  '/': { title: 'Home', content: 'Welcome to the Home Page' },
-  '/about': { title: 'About', content: 'Learn more about us' },
-  '/contact': { title: 'Contact', content: 'Get in touch' }
-};
-
-// Створення сервера
-const server = http.createServer((req, res) => {
-  const pathname = new URL(req.url, 'http://localhost').pathname;
-  
-  // Обробка GET запитів
-  if (req.method === 'GET') {
-    if (PAGES[pathname]) {
-      const { title, content } = PAGES[pathname];
-      sendHTML(res, 200, generateHTML(title, content));
-    } else {
-      sendHTML(res, 404, generateHTML('Error 404', 'Page Not Found'));
-    }
-    return;
-  }
-  
-  // Обробка POST запитів
-  if (req.method === 'POST' && pathname === '/submit') {
-    let body = '';
-    
-    req.on('data', (chunk) => {
-      body += chunk.toString();
-    });
-    
-    req.on('end', () => {
-      try {
-        const { name, email } = querystring.parse(body);
-        
-        // Валідація
-        if (!name || !email) {
-          sendHTML(res, 400, generateHTML('Error 400', 'Invalid form data'));
-          return;
-        }
-        
-        sendHTML(res, 200, generateHTML(
-          'Form Submitted',
-          `Name: ${name}<br>Email: ${email}`
-        ));
-      } catch (error) {
-        sendHTML(res, 500, generateHTML('Error 500', 'Server Error'));
-      }
-    });
-    return;
-  }
-  
-  // Інші запити
-  if (req.method === 'POST') {
-    sendHTML(res, 404, generateHTML('Error 404', 'Endpoint Not Found'));
-  } else {
-    sendHTML(res, 405, generateHTML('Error 405', 'Method Not Allowed'));
-  }
+// Маршрути для кореневого шляху
+app.get('/', (req, res) => {
+  res.status(200).send('Get root route');
 });
 
-// Відправка HTML відповіді
-function sendHTML(res, statusCode, html) {
-  const buffer = Buffer.from(html);
-  res.writeHead(statusCode, {
-    'Content-Type': 'text/html; charset=utf-8',
-    'Content-Length': buffer.length,
-    'X-Content-Type-Options': 'nosniff'
-  });
-  res.end(buffer);
-}
+// Маршрути для користувачів
+app.get('/users', (req, res) => {
+  res.status(200).send('Get users route');
+});
 
-// Прямий запуск сервера на порту 3000
-server.listen(PORT, () => {
+app.post('/users', (req, res) => {
+  res.status(201).send('Post users route');
+});
+
+app.get('/users/:userId', (req, res) => {
+  res.status(200).send(`Get user by Id route: ${req.params.userId}`);
+});
+
+app.put('/users/:userId', (req, res) => {
+  res.status(200).send(`Put user by Id route: ${req.params.userId}`);
+});
+
+app.delete('/users/:userId', (req, res) => {
+  res.status(204).send();
+});
+
+// Маршрути для статей
+app.get('/articles', (req, res) => {
+  res.status(200).send('Get articles route');
+});
+
+app.post('/articles', (req, res) => {
+  res.status(201).send('Post articles route');
+});
+
+app.get('/articles/:articleId', (req, res) => {
+  res.status(200).send(`Get article by Id route: ${req.params.articleId}`);
+});
+
+app.put('/articles/:articleId', (req, res) => {
+  res.status(200).send(`Put article by Id route: ${req.params.articleId}`);
+});
+
+app.delete('/articles/:articleId', (req, res) => {
+  res.status(204).send();
+});
+
+// Обробка помилок для неіснуючих маршрутів
+app.use((req, res) => {
+  res.status(404).send('Not Found');
+});
+
+// Глобальна обробка помилок
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Internal Server Error');
+});
+
+// Запуск сервера
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
 // Експорт для тестів
-export { server };
+export { server, app };
