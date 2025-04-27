@@ -2,6 +2,26 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+After uploading this repository to your environment, install the required dependencies:
+
+```sh
+npm install
+```
+
+Then test application:
+```sh
+npm test
+```
+## Description
+
+This project consists of the following containers:
+
+- **AnimalInterface.ts** - contains interface for each animal 
+- **fetchData.ts** - returns response from requested json data
+- **UserProfile.tsx** - Display all the data, holds and change all the states(error, loading, fields)
+- **UserProfile.test.tsx** - tests UserProfile.tsx and optional test for fetchData
+
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
