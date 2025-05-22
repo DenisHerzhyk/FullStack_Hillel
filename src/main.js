@@ -30,6 +30,7 @@
  */
 
 function isDebugMode() {
+  return process.env.NODE_ENV === 'development'
   // code here
 }
 
@@ -69,34 +70,46 @@ function isDebugMode() {
 
 // Функції для кодування даних з довільною кількістю аргументів
 function encodeToBase64(...args) {
+  const bfr = Buffer.from(args.join(':'))
+  return bfr.toString('base64')
   // code here
 }
 
 function encodeToHex(...args) {
   // code here
+  const bfr = Buffer.from(args.join(":"))
+  return bfr.toString('hex')
 }
 
 // Функції для декодування даних
 function decodeFromBase64(base64String) {
   // code here
+  const bfr = Buffer.from(base64String, 'base64')
+  return bfr.toString("utf-8")
 }
 
 function decodeFromHex(hexString) {
+  const bfr = Buffer.from(hexString, 'hex')
+  return bfr.toString("utf-8")
   // code here
 }
 
 // ! Приклад використання:
 // const base64Encoded = encodeToBase64('john@email.com', '123', 'extraData')
 // console.log('Base64 Encoded:', base64Encoded)
-//
+// console.log("--------------------------------")
+
 // const hexEncoded = encodeToHex('john@email.com', '123', 'extraData')
 // console.log('Hex Encoded:', hexEncoded)
-//
+// console.log("--------------------------------")
+
 // const base64Decoded = decodeFromBase64(base64Encoded)
 // console.log('Base64 Decoded:', base64Decoded)
-//
+// console.log("--------------------------------")
+
 // const hexDecoded = decodeFromHex(hexEncoded)
 // console.log('Hex Decoded:', hexDecoded)
+// console.log("--------------------------------")
 
 /*
  *
@@ -132,17 +145,27 @@ function decodeFromHex(hexString) {
  */
 
 function safeDecodeFromBase64(base64String) {
+  if (!/^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(base64String)) {
+    throw new Error("'Invalid base64 string'")
+  }
+  const bfr = Buffer.from(base64String, 'base64')
+  return bfr.toString("utf-8")
   // code here
 }
 
 function safeDecodeFromHex(hexString) {
+  if (!/^[A-Fa-f0-9]+$/.test(hexString)) {
+    throw new Error("'Invalid hex string'")
+  }
+  const bfr = Buffer.from(hexString, 'hex')
+  return bfr.toString("utf-8")
   // code here
 }
 
 // ! Приклад використання:
 // const safeBase64Decoded = safeDecodeFromBase64(base64Encoded)
 // console.log('Safe Base64 Decoded:', safeBase64Decoded)
-//
+
 // const safeHexDecoded = safeDecodeFromHex(hexEncoded)
 // console.log('Safe Hex Decoded:', safeHexDecoded)
 
