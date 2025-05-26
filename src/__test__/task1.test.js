@@ -65,15 +65,29 @@ describe('HTTP Server', () => {
     vi.spyOn(console, 'log').mockImplementation(() => {});
     vi.spyOn(console, 'error').mockImplementation(() => {});
     
-    // Сервер вже запущено на порту 3000 в файлі server.mjs
+    // Запускаємо сервер перед тестами
+    return new Promise((resolve) => {
+      server.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+        resolve();
+      });
+    });
   });
   
   afterAll(() => {
     // Закриваємо сервер після тестів
-    if (server && server.listening) {
-      server.close();
-    }
-    vi.restoreAllMocks();
+    return new Promise((resolve) => {
+      if (server && server.listening) {
+        server.close(() => {
+          console.log('Server closed');
+          resolve();
+        });
+      } else {
+        resolve();
+      }
+    }).finally(() => {
+      vi.restoreAllMocks();
+    });
   });
   
   // Тестування GET маршрутів
