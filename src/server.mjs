@@ -86,7 +86,6 @@ const server = http.createServer(async (req, res) => {
     }
 })
 
-// Only start the server if this file is run directly (not imported by tests)
 if (import.meta.url === `file://${process.argv[1]}`) {
     server.listen(PORT, () => {
         console.log("PORT 3000 in usage");
