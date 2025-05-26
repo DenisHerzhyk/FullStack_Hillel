@@ -24,9 +24,12 @@
  * - Підготовка функції для можливості легкого мокування та тестування за допомогою JEST.
  *
  */
+import crypto, {randomBytes} from 'node:crypto'
+
 
 function generateHash(input) {
   // code here
+  return crypto.createHash('sha256').update(input).digest('hex')
 }
 
 // console.log(generateHash('Hello, World!'))
@@ -63,12 +66,17 @@ function generateHash(input) {
 
 function generatePasswordHash(password, salt, iterations = 10000, keylen = 64, digest = 'sha512') {
   // code here
+  if (typeof salt != 'string') {
+    throw new Error('salt must be a string')
+  }
+  return crypto.pbkdf2Sync(password, salt, iterations, keylen, digest).toString('hex')
 }
 
 // Застосування функції
-// const password = 'superSecret123'
-// const salt = randomBytes(16).toString('hex')
-// const hash = generatePasswordHash(password, salt)
+const password = 'superSecret123'
+const salt = randomBytes(16).toString('hex')
+const hash = generatePasswordHash(password, salt)
+// console.log(hash)
 
 /*
  *
@@ -103,11 +111,13 @@ function generatePasswordHash(password, salt, iterations = 10000, keylen = 64, d
 
 function verifyPassword(inputPassword, storedHash, salt, iterations = 10000, keylen = 64, digest = 'sha512') {
   // code here
+  const saltInputPassword = crypto.pbkdf2Sync(inputPassword, salt, iterations, keylen, digest).toString('hex')
+  return saltInputPassword === storedHash
 }
 
 // Застосування функції
-// const inputPassword = 'superSecret123'
-// const isCorrect = verifyPassword(inputPassword, hash, salt)
-// console.log(isCorrect ? 'Пароль вірний.' : 'Пароль невірний.')
+const inputPassword = 'superSecret123'
+const isCorrect = verifyPassword(inputPassword, hash, salt)
+console.log(isCorrect ? 'Пароль вірний.' : 'Пароль невірний.')
 
 export { generateHash, generatePasswordHash, verifyPassword }
