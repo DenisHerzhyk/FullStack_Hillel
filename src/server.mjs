@@ -26,10 +26,10 @@ const server = http.createServer(async (req, res) => {
                 const email = parsedBody.email || '';
                 
                 if (!name || !email) {
-                    const errMessage = "Invalid form data";
+                    const errMessage = htmlTemplate("Error", "Invalid form data");
                     res.statusCode = 400;
                     setHeaderTemplate(res, errMessage);
-                    return res.end(htmlTemplate("Error", errMessage));
+                    res.end(errMessage);
                 }
 
                 const loginResponse = `
@@ -39,45 +39,45 @@ const server = http.createServer(async (req, res) => {
                     `;
                 res.statusCode = 200;
                 setHeaderTemplate(res, loginResponse);
-                res.end(htmlTemplate("Form Submitted", loginResponse));
+                res.end(loginResponse);
             });
         }
         else if (req.method == 'GET' && req.url == '/') {
-            const message = "Welcome to the Home Page";
+            const message = htmlTemplate("Home","Welcome to the Home Page");
             res.statusCode = 200;
             setHeaderTemplate(res, message) 
-            res.end(htmlTemplate("Home",message))
+            res.end(message);
         }
         else if (req.method == 'GET' && req.url == "/about") {
-            const message = "Learn more about us";
+            const message = htmlTemplate("About", "Learn more about us");
             res.statusCode = 200;
             setHeaderTemplate(res, message)
-            res.end(htmlTemplate("About", message))
+            res.end(message)
         }
         else if (req.method == 'GET' && req.url == "/contact") {
-            const message = "Get in touch";
+            const message = htmlTemplate("Contact", "Get in touch");
             res.statusCode = 200;
             setHeaderTemplate(res, message)
-            res.end(htmlTemplate("Contact", message))
+            res.end(message)
         }
         else if (req.method !== 'GET' && req.method !== 'POST') {
-            const errMessage = "Method Not Allowed";
+            const errMessage = htmlTemplate("405 Method Not Allowed", "Method Not Allowed");
             res.statusCode = 405;
             setHeaderTemplate(res, errMessage);
-            res.end(htmlTemplate("405 Method Not Allowed", errMessage));
+            res.end(errMessage);
         }
         else {
-            const errMessage = "Page Not Found";
+            const errMessage = htmlTemplate("404 Not Found", "Page Not Found");
             res.statusCode = 404;
             setHeaderTemplate(res, errMessage);
-            res.end(htmlTemplate("404 Not Found", errMessage));
+            res.end(errMessage);
         }
     }
     catch {
-        const errMessage = "Server Error";
+        const errMessage = htmlTemplate("500 Internal Server Error", "Server Error");
         res.statusCode = 500;
         setHeaderTemplate(res, errMessage)
-        res.end(htmlTemplate("500 Internal Server Error", errMessage))
+        res.end(errMessage);
     }
 })
 
