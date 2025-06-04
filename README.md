@@ -33,3 +33,11 @@ _yarn повинен бути встановлений глобально, це 
 1. Зробіть скріншот пройдених тестів та відправте його як доказ виконання завдання.
 2. Завантажте ваш проект на GitHub.
 3. Надайте пряме посилання на файл (або файли) JavaScript (або TypeScript) у вашому проекті.
+
+## 5. Project structure:
+- **responses** - folder that contains all responses
+  - **articleResponses** - contains all responses for /articles and /articles/:articleId requests
+  - **usersResponses** - contains all responses for /users and /users/:userId requests
+  - **rootResponse** - contains response for / request
+- **middleware** - contains middlewares for error status 404 and 500
+- **responses** - handle all responses from responses folder
