@@ -3,7 +3,6 @@ import { articlePermission } from './middlewares/articlePermission.mjs';
 import { validateUser } from './middlewares/validateUser.mjs';
 import { rootAccess } from './middlewares/rootAccess.mjs';
 import { authenticate } from './middlewares/authenticate.mjs';
-import {errorHandler} from './middlewares/errorHandler.mjs';
 import session from 'express-session'
 import express from 'express';
 
@@ -21,7 +20,6 @@ const middlewaresHandler = (app) => {
     app.use('/users/:userId', authenticate, validateUser)
     app.use('/articles', authenticate, articlePermission);
     app.use('/articles/:articleId', authenticate, articlePermission)
-    errorHandler(app);
 }
 
 export {middlewaresHandler}

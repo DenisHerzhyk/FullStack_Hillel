@@ -1,14 +1,13 @@
 const articlePermission = (req, res, next) => {
-    // Allow POST requests to set permission
-    if (req.method === 'POST') {
-        return next();
+    switch(req.method) {
+        case 'GET':
+        case 'POST':
+        case 'PUT':
+        case 'DELETE':
+            return next();
+        default:
+            return res.status(404).send('Not Found');
     }
-    
-    // Check permission for other methods
-    if (!req.session.hasPermission) {
-        return res.status(403).send('Insufficient permissions')
-    }
-    next()
 }
 
 export {articlePermission}

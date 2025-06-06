@@ -1,9 +1,9 @@
-const authenticate = (req,res,next) => {
+const authenticate = (req, res, next) => {
     // const auth = req.headers['authorization'];
     // if (!auth) {
     //     return res.status(401).send('Access denied!')
     // }
-    next()
+    next();
 }
 
 export {authenticate}
