@@ -9,7 +9,8 @@ const articleResponse = (app) => {
     })  
 
     app.post('/articles', (req, res) => {
-        if (!req.body.title || req.body.title.trim() === '') {
+        req.session.hasPermission = true;
+        if (!req.body || !req.body.title || req.body.title.trim() === '') {
             return res.status(400).send(status400);
         }
 
@@ -29,7 +30,7 @@ const articleResponse = (app) => {
         if (articleId !== VALID_ARTICLE_ID) {
             return res.status(404).send(status404);
         }
-        if (!req.body.title || req.body.title.trim() === '') {
+        if (!req.body || !req.body.title || req.body.title.trim() === '') {
             return res.status(400).send(status400);
         }
         res.status(200).send(`Put article by Id route: ${articleId}`);

@@ -1,22 +1,18 @@
 // Реалізація EXPRESS сервера відповідно до завдання, описаного у файлі ASSIGNMENT.md
-
-// Імпортуємо необхідні модулі
 import express from 'express';
 import {responses} from './responses.mjs';
-import {middlewares} from './middlewares.mjs';
-// Створюємо EXPRESS сервер
-const port = 3000;
+import {errorHandler} from './middlewares/errorHandler.mjs';
+import { middlewaresHandler } from './middlewaresHandler.mjs';
+
+const PORT = 3000;
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
-
+middlewaresHandler(app);
 responses(app);
-middlewares(app);
+errorHandler(app);
 
-const server = app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+const server = app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 
-// Експорт для тестів
 export { server, app };

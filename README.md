@@ -35,9 +35,16 @@ _yarn повинен бути встановлений глобально, це 
 3. Надайте пряме посилання на файл (або файли) JavaScript (або TypeScript) у вашому проекті.
 
 ## 5. Project structure:
-- **responses** - folder that contains all responses
+- **responses** folder - contains all responses
   - **articleResponses** - contains all responses for /articles and /articles/:articleId requests
   - **usersResponses** - contains all responses for /users and /users/:userId requests
   - **rootResponse** - contains response for / request
-- **middleware** - contains middlewares for error status 404 and 500
+- **middleware** folder contains middleware functionality
+  - **articlePermission** - sets permission in post request, if post wasn't involved then throws 403 error
+  - **authentication**(unfinished) - expected to authorize titles
+  - **errorHandling** - contains middlewares for error status 404 and 500
+  - **logger** - will log each response method and response path
+  - **rootAccess** - will log once root path accessed
+  - **validateUser** - will check for correct input data and give 403 error if invalid
+- **middleware** - handle all middleware calls in one function
 - **responses** - handle all responses from responses folder
