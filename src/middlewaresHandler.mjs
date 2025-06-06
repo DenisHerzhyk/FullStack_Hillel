@@ -1,8 +1,8 @@
-import { logger } from './middlewares/logger.mjs';
-import { articlePermission } from './middlewares/articlePermission.mjs';
-import { validateUser } from './middlewares/validateUser.mjs';
-import { rootAccess } from './middlewares/rootAccess.mjs';
-import { authenticate } from './middlewares/authenticate.mjs';
+import { logger } from '../middleware/logger.mjs';
+import { articlePermission } from '../middleware/articlePermission.mjs';
+import { validateUser } from '../middleware/validateUser.mjs';
+import { rootAccess } from '../middleware/rootAccess.mjs';
+import { authenticate } from '../middleware/authenticate.mjs';
 import session from 'express-session'
 import express from 'express';
 
