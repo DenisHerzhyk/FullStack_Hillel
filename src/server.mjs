@@ -7,8 +7,8 @@ import { middlewaresHandler } from './middlewaresHandler.mjs';
 const PORT = 3000;
 const app = express();
 
+// Set view engine to Pug (for users)
 app.set('view engine', 'pug');
-app.set('view engine', 'ejs');
 
 middlewaresHandler(app);
 responses(app);

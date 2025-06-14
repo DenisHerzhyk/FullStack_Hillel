@@ -38,7 +38,8 @@ describe('Express REST API', () => {
       const response = await request(app).get('/users');
 
       expect(response.status).toBe(200);
-      expect(response.text).toBe('Get users route');
+      expect(response.text).toContain('users get');
+      expect(response.text).toContain('123: Denys');
     });
 
     test('POST /users повинен повертати статус 201 та правильне повідомлення', async () => {
@@ -63,7 +64,8 @@ describe('Express REST API', () => {
       const response = await request(app).get(`/users/${VALID_USER_ID}`);
 
       expect(response.status).toBe(200);
-      expect(response.text).toBe(`Get user by Id route: ${VALID_USER_ID}`);
+      expect(response.text).toContain('user detail');
+      expect(response.text).toContain('Denys');
     });
 
     test('GET /users/:userId повинен повертати статус 404 для неіснуючого користувача', async () => {
@@ -121,7 +123,8 @@ describe('Express REST API', () => {
       const response = await request(app).get('/articles');
 
       expect(response.status).toBe(200);
-      expect(response.text).toBe('Get articles route');
+      expect(response.text).toContain('articles get');
+      expect(response.text).toContain('456: Sample article detail');
     });
 
     test('POST /articles повинен повертати статус 201 та правильне повідомлення', async () => {
@@ -146,7 +149,8 @@ describe('Express REST API', () => {
       const response = await request(app).get(`/articles/${VALID_ARTICLE_ID}`);
 
       expect(response.status).toBe(200);
-      expect(response.text).toBe(`Get article by Id route: ${VALID_ARTICLE_ID}`);
+      expect(response.text).toContain('article detail');
+      expect(response.text).toContain('Sample article detail');
     });
 
     test('GET /articles/:articleId повинен повертати статус 404 для неіснуючої статті', async () => {
