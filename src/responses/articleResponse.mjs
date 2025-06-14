@@ -2,10 +2,12 @@ const status400 = 'Bad Request'
 const status404 = 'Not Found';
 
 const VALID_ARTICLE_ID = '456';
+const ARTICLES = {'456': 'Sample article detail'}
 
 const articleResponse = (app) => {
     app.get('/articles', (req, res) => {
-        res.status(200).send('Get articles route')
+        const data = {title: 'articles get', articles: ARTICLES}
+        res.status(200).render('articles', data)
     })  
 
     app.post('/articles', (req, res) => {
@@ -22,7 +24,8 @@ const articleResponse = (app) => {
         if (articleId !== VALID_ARTICLE_ID) {
             return res.status(404).send(status404);
         }
-        res.status(200).send(`Get article by Id route: ${articleId}`);
+        const data = {title: 'article detail', article: ARTICLES[articleId]}
+        res.status(200).render('articleId', data)
     })
 
     app.put('/articles/:articleId', (req, res) => {

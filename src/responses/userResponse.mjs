@@ -2,10 +2,12 @@ const status400 = 'Bad Request'
 const status404 = 'Not Found';
 
 const VALID_USER_ID = '123';
+const USERS = {'123': 'Denys'}
 
 const userResponse = (app) => {
     app.get('/users', (req, res) => {
-        res.status(200).send('Get users route')
+        const data = {title: 'users get', users: USERS}
+        res.status(200).render('users', data);
     })
 
     app.post('/users', (req, res) => {
@@ -21,7 +23,8 @@ const userResponse = (app) => {
         if (userId !== VALID_USER_ID) {
             return res.status(404).send(status404);
         }
-        res.status(200).send(`Get user by Id route: ${userId}`);
+        const data = {title: 'user detail', user: USERS[userId]}
+        res.status(200).render('userId', data);
     })
 
     app.put('/users/:userId', (req, res) => {

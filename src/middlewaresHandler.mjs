@@ -5,6 +5,11 @@ import { rootAccess } from '../middleware/rootAccess.mjs';
 import { authenticate } from '../middleware/authenticate.mjs';
 import session from 'express-session'
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const middlewaresHandler = (app) => {
     app.use(express.json());
@@ -14,6 +19,7 @@ const middlewaresHandler = (app) => {
         resave: false,
         saveUninitialized: false
     }))
+    app.set('views', path.join(__dirname, '../views'))
     app.use(logger)
     app.get('/', rootAccess)
     app.use('/users', authenticate, validateUser)

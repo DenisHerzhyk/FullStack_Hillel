@@ -48,3 +48,8 @@ _yarn повинен бути встановлений глобально, це 
   - **validateUser** - will check for correct input data and give 403 error if invalid
 - **middleware** - handle all middleware calls in one function
 - **responses** - handle all responses from responses folder
+- **views** - folder to handle pug and ejs html format responses
+  -**articleId.ejs** - handles article id response through ejs template
+  -**articles.ejs** - handles articles get reponse and displays all articles through ejs template
+  -**userId.pug** - handles user id response through pug template
+  -**users.pug** - handles users get response and displays all users through pug template
